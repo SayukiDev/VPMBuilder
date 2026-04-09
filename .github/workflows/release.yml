@@ -47,7 +47,7 @@ jobs:
           CGO_ENABLED: 0
         run: |
           mkdir -p dist
-          BIN_NAME="VPMBuilder-${{ github.event.release.tag_name }}-${{ matrix.goos }}-${{ matrix.goarch }}${{ matrix.ext }}"
+          BIN_NAME="VPMBuilder-${{ matrix.goos }}-${{ matrix.goarch }}${{ matrix.ext }}"
           go build -trimpath -ldflags="-s -w" -o "dist/${BIN_NAME}" .
 
       - name: Upload to Release
