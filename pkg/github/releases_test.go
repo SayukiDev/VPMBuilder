@@ -66,7 +66,7 @@ func TestGetReleases_Success(t *testing.T) {
 		t.Fatalf("expected 2 releases, got %d", len(releases))
 	}
 
-	r := releases[0]
+	r := releases[1]
 	if r.ID != 1 {
 		t.Errorf("expected ID 1, got %d", r.ID)
 	}
@@ -92,7 +92,7 @@ func TestGetReleases_Success(t *testing.T) {
 		t.Errorf("expected asset size 1024, got %d", r.Assets[0].Size)
 	}
 
-	if !releases[1].Prerelease {
+	if !releases[0].Prerelease {
 		t.Error("expected second release prerelease=true")
 	}
 }

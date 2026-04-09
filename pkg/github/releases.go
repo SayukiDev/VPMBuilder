@@ -2,22 +2,35 @@ package github
 
 import (
 	"fmt"
+	"slices"
+
+	"github.com/go-resty/resty/v2"
 )
 
 func (c *Client) GetReleases(repo string) ([]Release, error) {
 	var releases []Release
-
-	resp, err := c.resty.R().
-		SetResult(&releases).
-		Get("/repos/" + repo + "/releases")
-	if err != nil {
-		return nil, fmt.Errorf("github: request failed for %s: %w", repo, err)
+	var resp *resty.Response
+	var err error
+	for i := 1; ; i++ {
+		temp := make([]Release, 0)
+		resp, err = c.resty.R().
+			SetResult(&temp).
+			SetQueryParams(map[string]string{
+				"page": fmt.Sprintf("%d", i),
+			}).
+			Get("/repos/" + repo + "/releases")
+		if err != nil {
+			return nil, fmt.Errorf("github: request failed for %s: %w", repo, err)
+		}
+		if resp.IsError() {
+			return nil, fmt.Errorf("github: unexpected status %d for %s: %s", resp.StatusCode(), repo, resp.String())
+		}
+		releases = append(releases, temp...)
+		if len(temp) < 100 {
+			break
+		}
 	}
-
-	if resp.IsError() {
-		return nil, fmt.Errorf("github: unexpected status %d for %s: %s", resp.StatusCode(), repo, resp.String())
-	}
-
+	slices.Reverse(releases)
 	return releases, nil
 }
 
