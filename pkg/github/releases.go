@@ -17,6 +17,9 @@ func (c *Client) GetReleases(repo string) ([]Release, error) {
 	}
 
 	if resp.IsError() {
+		if resp.StatusCode() == 404 {
+			return nil, nil
+		}
 		return nil, fmt.Errorf("github: unexpected status %d for %s: %s", resp.StatusCode(), repo, resp.String())
 	}
 
