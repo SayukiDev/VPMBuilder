@@ -7,11 +7,11 @@ type Package struct {
 	Author          Author            `json:"author"`
 	Unity           string            `json:"unity"`
 	Description     string            `json:"description"`
-	VpmDependencies map[string]string `json:"vpmDependencies"`
+	VpmDependencies map[string]string `json:"vpmDependencies,omitempty"`
 	Url             string            `json:"url"`
-	LegacyFolders   map[string]string `json:"legacyFolders"`
-	LegacyFiles     map[string]string `json:"legacyFiles"`
-	LegacyPackages  []string          `json:"legacyPackages"`
+	LegacyFolders   map[string]string `json:"legacyFolders,omitempty"`
+	LegacyFiles     map[string]string `json:"legacyFiles,omitempty"`
+	LegacyPackages  []string          `json:"legacyPackages,omitempty"`
 }
 
 type Author struct {
