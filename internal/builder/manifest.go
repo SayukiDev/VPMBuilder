@@ -47,13 +47,13 @@ func (b *Builder) getLastPackagesManifest() (map[string]*manifest.Package, error
 	if len(rs) == 0 {
 		return nil, nil
 	}
-	if len(rs[0].Assets) == 0 {
-		return nil, nil
-	}
-	url := rs[0].Assets[0].BrowserDownloadURL
-	for _, a := range rs[0].Assets {
-		if a.Name == "packages.json" {
-			url = a.BrowserDownloadURL
+	var url string
+	for _, r := range rs {
+		for _, a := range r.Assets {
+			if a.Name == "packages.json" {
+				url = a.BrowserDownloadURL
+				break
+			}
 		}
 	}
 	if url == "" {
