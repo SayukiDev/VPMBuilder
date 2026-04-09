@@ -17,6 +17,7 @@ type Package struct {
 type Author struct {
 	Name  string `json:"name"`
 	Email string `json:"email"`
+	Url   string `json:"url"`
 }
 
 func (p *Package) ToRepoPackage(downloadUrl string) *RepoPackageVersion {
