@@ -16,6 +16,9 @@ func (b *Builder) BuildRepoManifest() error {
 	if err != nil {
 		return err
 	}
+	if len(rs) == 0 {
+		return fmt.Errorf("no releases found for %s", b.repoUrl)
+	}
 	repo := manifest.NewRepositoryManifest()
 	f, err := os.Open(b.repoTemplate)
 	if err != nil {

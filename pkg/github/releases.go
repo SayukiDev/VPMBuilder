@@ -1,25 +1,20 @@
 package github
 
-import "fmt"
+import (
+	"fmt"
+)
 
 func (c *Client) GetReleases(repo string) ([]Release, error) {
 	var releases []Release
 
 	resp, err := c.resty.R().
-		SetPathParams(map[string]string{
-			"repo": repo,
-		}).
 		SetResult(&releases).
-		Get("/repos/{repo}/releases")
-
+		Get("/repos/" + repo + "/releases")
 	if err != nil {
 		return nil, fmt.Errorf("github: request failed for %s: %w", repo, err)
 	}
 
 	if resp.IsError() {
-		if resp.StatusCode() == 404 {
-			return nil, nil
-		}
 		return nil, fmt.Errorf("github: unexpected status %d for %s: %s", resp.StatusCode(), repo, resp.String())
 	}
 
