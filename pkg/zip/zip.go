@@ -46,7 +46,7 @@ func compressDir(writer *zip.Writer, path string) (err error) {
 }
 
 func trimRootPath(path string, rootPath string) string {
-	return filepath.ToSlash(path[len(rootPath)+1:])
+	return filepath.ToSlash(filepath.Clean(path)[len(rootPath)+1:])
 }
 
 func addFile(writer *zip.Writer, path string, realPath string) (err error) {
