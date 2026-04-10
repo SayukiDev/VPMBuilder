@@ -1,7 +1,7 @@
 # VPMBuilder
 
 VRChat Package Manager (VPM) のパッケージとリポジトリマニフェストをビルドするための CLI ツールです。
-Unity プロジェクト内の VPM パッケージを zip にまとめ、GitHub Releases から `repo.json` を自動生成できます。
+Unity プロジェクト内の VPM パッケージを zip にまとめてGitHub Releasesに上げたり、GitHub Releases から リポジトリマニフェスト (`repo.json`)  を自動生成したりすることができます。
 
 ## 特長
 
