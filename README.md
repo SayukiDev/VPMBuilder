@@ -1,5 +1,7 @@
 # VPMBuilder
 
+[![License](https://img.shields.io/badge/License-GPL-blue.svg)](LICENSE)
+
 VRChat Package Manager (VPM) のパッケージとリポジトリマニフェストをビルドするための CLI ツールです。
 Unity プロジェクト内の VPM パッケージを zip にまとめてGitHub Releasesに上げたり、GitHub Releases から リポジトリマニフェスト (`repo.json`)  を自動生成したりすることができます。
 
@@ -124,4 +126,9 @@ VPMBuilder/
 
 ## ライセンス
 
-このリポジトリのライセンス表記に従います。
+
+本プロジェクトは [GNU一般公衆ライセンス3.0](https://www.gnu.org/licenses/gpl-3.0.ja.html) を基づき発行しております、
+被配布者(ユーザー)には使用の自由・二次開発の自由・二次配布（販売含む）の自由などの自由が保証されます。
+ただし二次配布の場合必ず同じ [GNU一般公衆ライセンス3.0](https://www.gnu.org/licenses/gpl-3.0.ja.html) で発行するよう義務付けられます、
+そして二次被配布者には本プロジェクトが被配布者に与えた自由と同じ自由が与えられます、
+それらの自由を制限・干渉するあらゆる行為は一切認められません。
