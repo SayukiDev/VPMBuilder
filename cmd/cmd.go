@@ -2,6 +2,7 @@ package cmd
 
 import (
 	config2 "VPMBuilder/internal/config"
+	content2 "VPMBuilder/internal/content"
 	"VPMBuilder/internal/log"
 
 	"github.com/spf13/cobra"
@@ -20,6 +21,7 @@ var rootCmd = &cobra.Command{
 
 var configPath string
 var config *config2.Config
+var content *content2.Content
 
 func init() {
 	rootCmd.PersistentFlags().StringVarP(&configPath, "config", "c", "config.json", "config file path")
@@ -34,6 +36,8 @@ func startup() {
 	}
 	log.SetLogLevel(config.LogLevel)
 	log.Info("Config loaded.")
+	log.Info("Initializing Content...")
+	content = content2.NewContent(config)
 	log.Info("VPM Builder initialized.")
 }
 

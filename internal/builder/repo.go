@@ -2,7 +2,7 @@ package builder
 
 import (
 	"VPMBuilder/pkg/github"
-	"VPMBuilder/pkg/vpm/manifest"
+	"VPMBuilder/pkg/vpm"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -19,13 +19,7 @@ func (b *Builder) BuildRepoManifest() error {
 	if len(rs) == 0 {
 		return fmt.Errorf("no releases found for %s", b.repoUrl)
 	}
-	repo := manifest.NewRepositoryManifest()
-	f, err := os.Open(b.repoTemplate)
-	if err != nil {
-		return err
-	}
-	defer f.Close()
-	err = json.NewDecoder(f).Decode(repo)
+	repo, err := b.readRepoManifest(b.repoTemplate)
 	if err != nil {
 		return err
 	}
@@ -45,7 +39,7 @@ func (b *Builder) BuildRepoManifest() error {
 		if err != nil {
 			return fmt.Errorf("get packages.json from release %s: %w", r.TagName, err)
 		}
-		var pms map[string]*manifest.Package
+		var pms map[string]*vpm.Package
 		if err := json.Unmarshal(body, &pms); err != nil {
 			return fmt.Errorf("parse packages.json from release %s: %w", r.TagName, err)
 		}
@@ -58,13 +52,13 @@ func (b *Builder) BuildRepoManifest() error {
 			if !ok {
 				continue
 			}
-			rpv := pm.ToRepoPackage(a.BrowserDownloadURL)
+			pm.Url = a.BrowserDownloadURL
 			if repo.Packages[pm.Name] == nil {
-				repo.Packages[pm.Name] = &manifest.RepoPackage{
-					Versions: make(map[string]*manifest.RepoPackageVersion),
+				repo.Packages[pm.Name] = &vpm.RepoPackage{
+					Versions: make(map[string]*vpm.Package),
 				}
 			}
-			repo.Packages[pm.Name].Versions[pm.Version] = rpv
+			repo.Packages[pm.Name].Versions[pm.Version] = pm
 		}
 	}
 	f2, err := os.OpenFile(filepath.Join(b.output, "repo.json"), os.O_CREATE|os.O_WRONLY, 0644)
@@ -80,24 +74,14 @@ func (b *Builder) BuildRepoManifest() error {
 }
 
 func (b *Builder) MergeRepoManifest(urls []string) error {
-	mergedRepo := manifest.NewRepositoryManifest()
-	f, err := os.Open(b.repoTemplate)
-	if err != nil {
-		return err
-	}
-	defer f.Close()
-	err = json.NewDecoder(f).Decode(mergedRepo)
+	mergedRepo, err := b.readRepoManifest(b.repoTemplate)
 	if err != nil {
 		return err
 	}
 	for _, url := range urls {
-		var repo manifest.RepositoryManifest
-		resp, err := b.resty.R().SetResult(&repo).Get(url)
+		repo, err := b.readRepoManifestFromUrl(url)
 		if err != nil {
 			return err
-		}
-		if resp.IsError() {
-			return fmt.Errorf("unexpected status %d for %s: %s", resp.StatusCode(), url, resp.String())
 		}
 		for k, v := range repo.Packages {
 			mergedRepo.Packages[k] = v

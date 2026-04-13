@@ -19,7 +19,7 @@ func init() {
 }
 
 func mergeHandler(_ *cobra.Command, _ []string) {
-	b := builder.NewBuilder(config.DownloadRepo, config.OutputPath, config.RepoTemplate)
+	b := builder.NewBuilder(config.DownloadRepo, config.OutputPath, config.RepoTemplate, content)
 	err := b.MergeRepoManifest(config.RepoUrls)
 	if err != nil {
 		log.ErrorE("Failed to merge repo manifest", zap.Error(err))

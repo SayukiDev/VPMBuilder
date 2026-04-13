@@ -1,14 +1,9 @@
-package manifest
+package vpm
 
 type RepoPackage struct {
-	Versions map[string]*RepoPackageVersion `json:"versions"` // version -> repo package version
+	Versions map[string]*Package `json:"versions"` // version -> repo package version
 }
 
-type RepoPackageVersion struct {
-	Name    string `json:"name"`
-	Url     string `json:"url"`
-	Package `json:",inline"`
-}
 type RepositoryManifest struct {
 	Name     string                  `json:"name"`
 	Id       string                  `json:"id"`

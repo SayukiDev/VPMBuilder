@@ -1,7 +1,7 @@
 package builder
 
 import (
-	"VPMBuilder/pkg/vpm/manifest"
+	"VPMBuilder/pkg/vpm"
 	"VPMBuilder/pkg/zip"
 	"context"
 	"fmt"
@@ -18,14 +18,14 @@ func (b *Builder) BuildPackages(path []string) (int, error) {
 		return 0, err
 	}
 	if m == nil {
-		m = make(map[string]*manifest.Package)
+		m = make(map[string]*vpm.Package)
 	}
 	pl := pool.New().
 		WithContext(context.Background()).
 		WithCancelOnError().
 		WithFirstError().
 		WithMaxGoroutines(runtime.NumCPU() * 2)
-	pmChan := make(chan *manifest.Package, len(path))
+	pmChan := make(chan *vpm.Package, len(path))
 	for _, p := range path {
 		pl.Go(func(ctx context.Context) error {
 			select {
@@ -34,7 +34,7 @@ func (b *Builder) BuildPackages(path []string) (int, error) {
 			default:
 			}
 			b.zap.Debug("Building Package...", zap.String("path", p))
-			pm, err := readPackageManifest(filepath.Join(p, "package.json"))
+			pm, err := b.readPackageManifest(filepath.Join(p, "package.json"))
 			if err != nil {
 				return fmt.Errorf("read package.json failed: %v", err)
 			}
@@ -71,7 +71,7 @@ func (b *Builder) BuildPackages(path []string) (int, error) {
 	return len(m), nil
 }
 
-func (b *Builder) buildPackage(path string, p *manifest.Package) error {
+func (b *Builder) buildPackage(path string, p *vpm.Package) error {
 	err := zip.Compress(path, filepath.Join(
 		b.output,
 		fmt.Sprintf("%s-%s.zip", p.Name, p.Version),

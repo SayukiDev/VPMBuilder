@@ -1,6 +1,7 @@
 package builder
 
 import (
+	"VPMBuilder/internal/content"
 	"VPMBuilder/internal/log"
 	"os"
 	"time"
@@ -15,9 +16,10 @@ type Builder struct {
 	repoTemplate string
 	resty        *resty.Client
 	zap          *zap.Logger
+	content      *content.Content
 }
 
-func NewBuilder(repoUrl string, output string, repoTemplate string) *Builder {
+func NewBuilder(repoUrl string, output string, repoTemplate string, c *content.Content) *Builder {
 	os.MkdirAll(output, 0755)
 	return &Builder{
 		repoUrl:      repoUrl,
@@ -25,5 +27,6 @@ func NewBuilder(repoUrl string, output string, repoTemplate string) *Builder {
 		repoTemplate: repoTemplate,
 		resty:        resty.New().SetTimeout(30 * time.Second),
 		zap:          log.SubLogger("builder"),
+		content:      c,
 	}
 }

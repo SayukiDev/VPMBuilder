@@ -26,7 +26,7 @@ func init() {
 }
 
 func buildHandler(_ *cobra.Command, _ []string) {
-	b := builder.NewBuilder(config.DownloadRepo, config.OutputPath, config.RepoTemplate)
+	b := builder.NewBuilder(config.DownloadRepo, config.OutputPath, config.RepoTemplate, content)
 	switch buildType {
 	case buildTypePackage:
 		log.Info("Building packages...", zap.Strings("paths", config.PackagePaths))
