@@ -44,3 +44,7 @@ func (c *Client) GetReleaseAsset(url string) ([]byte, error) {
 	}
 	return r.Body(), nil
 }
+
+func FormatReleaseUrl(repo string, tagName string) string {
+	return "https://github.com/" + repo + "/releases/tag" + tagName
+}

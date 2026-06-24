@@ -55,6 +55,9 @@ func (b *Builder) BuildRepoManifest() error {
 			if !ok {
 				continue
 			}
+			if pm.ChangelogUrl == "" {
+				pm.ChangelogUrl = github.FormatReleaseUrl(b.repoUrl, r.TagName)
+			}
 			if repo.Packages[pm.Name] == nil {
 				repo.Packages[pm.Name] = &vpm.RepoPackageVersions{
 					Versions: make(map[string]*vpm.RepoPackage),

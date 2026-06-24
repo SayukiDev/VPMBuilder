@@ -1,6 +1,7 @@
 package builder
 
 import (
+	"VPMBuilder/pkg/sha"
 	"VPMBuilder/pkg/vpm"
 	"VPMBuilder/pkg/zip"
 	"context"
@@ -72,12 +73,18 @@ func (b *Builder) BuildPackages(path []string) (int, error) {
 }
 
 func (b *Builder) buildPackage(path string, p *vpm.Package) error {
-	err := zip.Compress(path, filepath.Join(
+	zipF := filepath.Join(
 		b.output,
 		fmt.Sprintf("%s-%s.zip", p.Name, p.Version),
-	))
+	)
+	err := zip.Compress(path, zipF)
 	if err != nil {
 		return fmt.Errorf("compress package failed: %v", err)
 	}
+	hash, err := sha.SHA256FromFile(zipF)
+	if err != nil {
+		return err
+	}
+	p.ZipSHA256 = hash
 	return nil
 }
