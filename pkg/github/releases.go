@@ -2,7 +2,9 @@ package github
 
 import (
 	"fmt"
+	"path/filepath"
 	"slices"
+	"strings"
 
 	"github.com/go-resty/resty/v2"
 )
@@ -46,5 +48,9 @@ func (c *Client) GetReleaseAsset(url string) ([]byte, error) {
 }
 
 func FormatReleaseUrl(repo string, tagName string) string {
-	return "https://github.com/" + repo + "/releases/tag" + tagName
+	p := filepath.Join(repo, "/releases/tag/", tagName)
+	if strings.HasPrefix(p, "/") {
+		p = p[1:]
+	}
+	return "https://github.com/" + p
 }
