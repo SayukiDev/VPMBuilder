@@ -48,6 +48,9 @@ func (b *Builder) BuildRepoManifest() error {
 				continue
 			}
 			nameS := strings.Split(a.Name, "-")
+			if len(nameS) > 2 {
+				nameS[0] = strings.Join(nameS[:len(nameS)-1], "-")
+			}
 			pm, ok := pms[nameS[0]]
 			if !ok {
 				continue
@@ -60,6 +63,9 @@ func (b *Builder) BuildRepoManifest() error {
 			}
 			repo.Packages[pm.Name].Versions[pm.Version] = pm
 		}
+	}
+	if len(repo.Packages) == 0 {
+		return fmt.Errorf("no packages found for %s", b.repoUrl)
 	}
 	f2, err := os.OpenFile(filepath.Join(b.output, "repo.json"), os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
