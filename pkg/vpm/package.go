@@ -16,7 +16,6 @@ type Package struct {
 	Unity           string            `json:"unity"`
 	Description     string            `json:"description"`
 	VpmDependencies map[string]string `json:"vpmDependencies,omitempty"`
-	Url             string            `json:"url" validate:"required"`
 	LegacyFolders   map[string]string `json:"legacyFolders,omitempty"`
 	LegacyFiles     map[string]string `json:"legacyFiles,omitempty"`
 	LegacyPackages  []string          `json:"legacyPackages,omitempty"`

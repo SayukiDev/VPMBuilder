@@ -55,13 +55,15 @@ func (b *Builder) BuildRepoManifest() error {
 			if !ok {
 				continue
 			}
-			pm.Url = a.BrowserDownloadURL
 			if repo.Packages[pm.Name] == nil {
-				repo.Packages[pm.Name] = &vpm.RepoPackage{
-					Versions: make(map[string]*vpm.Package),
+				repo.Packages[pm.Name] = &vpm.RepoPackageVersions{
+					Versions: make(map[string]*vpm.RepoPackage),
 				}
 			}
-			repo.Packages[pm.Name].Versions[pm.Version] = pm
+			repo.Packages[pm.Name].Versions[pm.Version] = &vpm.RepoPackage{
+				Url:     a.BrowserDownloadURL,
+				Package: *pm,
+			}
 		}
 	}
 	if len(repo.Packages) == 0 {
